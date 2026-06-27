@@ -1,11 +1,5 @@
 // @ts-check
 
-const functionNodeTypes = ["FunctionDeclaration", "FunctionExpression", "ArrowFunctionExpression"];
-
-/**
- * @typedef {import("@oxlint/plugins").ESTree.Node & { typeAnnotation?: { typeAnnotation?: import("@oxlint/plugins").ESTree.Node | null } | null }} TypeAnnotatedNode
- */
-
 /**
  * @param {{ name: string; rules: Record<string, import("@oxlint/plugins").Rule> }} params
  */
@@ -40,15 +34,6 @@ export function createRule(rule) {
  */
 export function getSourceCode(context) {
   return context.sourceCode ?? context.getSourceCode();
-}
-
-/**
- * @param {import("@oxlint/plugins").Context} context
- * @returns {Record<string, unknown>}
- */
-export function getRuleOptions(context) {
-  const [options] = context.options ?? [];
-  return options && typeof options === "object" && !Array.isArray(options) ? options : {};
 }
 
 /**
@@ -90,20 +75,6 @@ export function getCalleeName(node) {
 /**
  * @param {import("@oxlint/plugins").ESTree.Node | undefined | null} node
  */
-export function isBooleanLiteral(node) {
-  return node?.type === "Literal" && typeof node.value === "boolean";
-}
-
-/**
- * @param {import("@oxlint/plugins").ESTree.Node | undefined | null} node
- */
-export function isFunctionLike(node) {
-  return typeof node?.type === "string" && functionNodeTypes.includes(node.type);
-}
-
-/**
- * @param {import("@oxlint/plugins").ESTree.Node | undefined | null} node
- */
 export function unwrapParameter(node) {
   if (node?.type === "AssignmentPattern") {
     return unwrapParameter(node.left);
@@ -114,14 +85,4 @@ export function unwrapParameter(node) {
   }
 
   return node;
-}
-
-/**
- * @param {import("@oxlint/plugins").ESTree.Node | undefined | null} parameter
- */
-export function getTypeNode(parameter) {
-  const unwrapped = /** @type {TypeAnnotatedNode | undefined | null} */ (
-    unwrapParameter(parameter)
-  );
-  return unwrapped?.typeAnnotation?.typeAnnotation ?? undefined;
 }

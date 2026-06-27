@@ -10,6 +10,6 @@
     "strict": true,
     "noEmit": true
   },
-  "include": ["src", "tests"],
-  "exclude": ["tests/**/fixtures"]
+  "include": ["lint"],
+  "exclude": ["lint/**/fixtures"]
 }

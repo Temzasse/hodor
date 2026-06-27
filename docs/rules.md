@@ -1,13 +1,10 @@
-# React Taste And TypeScript Taste Oxlint Rules
+# Hodor Oxlint Rules
 
 This package contains custom rules extracted from the copied Codex skills in `copied-skills/`.
 
-The rules are split into two independently loadable oxlint plugins:
+The rules are collected into one oxlint plugin named `hodor`.
 
-- `react-taste`
-- `typescript-taste`
-
-Built-in oxlint taste rules are grouped in `src/built-in-taste-rules.js` so they can be applied alongside the custom plugins.
+Built-in oxlint taste rules are grouped in `lint/built-in-taste-rules.js` so they can be applied alongside the custom plugin.
 
 Rules intentionally omitted because oxlint already has built-ins:
 
@@ -26,28 +23,27 @@ Rules intentionally omitted because oxlint already has built-ins:
 
 Implemented custom React rules:
 
-- `react-taste/no-react-fc`
-- `react-taste/no-forward-ref`
-- `react-taste/no-default-react-memoization`
-- `react-taste/no-function-deps-in-effect`
+- `hodor/no-react-fc`
+- `hodor/no-forward-ref`
+- `hodor/no-default-react-memoization`
+- `hodor/no-function-deps-in-effect`
 
 Implemented custom TypeScript rules:
 
-- `typescript-taste/no-boolean-flag-parameters`
-- `typescript-taste/prefer-named-object-parameters`
-- `typescript-taste/no-json-parse-type-assertion`
+- `hodor/no-positional-func-args`
+- `hodor/no-json-parse-type-assertion`
 
 Use from `oxlint.config.mjs`:
 
 ```js
-import { rules as builtInTasteRules } from "./src/built-in-taste-rules.js";
+import { rules as builtInTasteRules } from "./lint/built-in-taste-rules.js";
 
 export default {
-  jsPlugins: ["./src/react-taste.js", "./src/typescript-taste.js"],
+  jsPlugins: ["./lint/hodor.js"],
   rules: {
     ...builtInTasteRules.all,
-    "react-taste/no-react-fc": "error",
-    "typescript-taste/no-json-parse-type-assertion": "error"
+    "hodor/no-react-fc": "error",
+    "hodor/no-json-parse-type-assertion": "error"
   }
 };
 ```

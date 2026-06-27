@@ -1,15 +1,14 @@
-import { rules } from "./src/built-in-taste-rules.js";
+import { rules } from "./lint/built-in-taste-rules.js";
 
 export default {
-  jsPlugins: ["./src/react-taste.js", "./src/typescript-taste.js"],
+  jsPlugins: ["./lint/hodor.js"],
   rules: {
     ...rules.all,
-    "typescript-taste/no-boolean-flag-parameters": "error",
-    "typescript-taste/prefer-named-object-parameters": "error",
-    "typescript-taste/no-json-parse-type-assertion": "error",
-    "react-taste/no-react-fc": "error",
-    "react-taste/no-forward-ref": "error",
-    "react-taste/no-default-react-memoization": "error",
-    "react-taste/no-function-deps-in-effect": "error",
+    "hodor/no-positional-func-args": "error",
+    "hodor/no-json-parse-type-assertion": "error",
+    "hodor/no-react-fc": "error",
+    "hodor/no-forward-ref": "error",
+    "hodor/no-default-react-memoization": "error",
+    "hodor/no-function-deps-in-effect": "error",
   },
 };

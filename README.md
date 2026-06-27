@@ -1,25 +1,24 @@
 # eslint-plugin-codex-taste
 
-ESLint-compatible oxlint plugins for selected rules from the copied Codex React and TypeScript taste skills.
+ESLint-compatible oxlint plugin for selected rules from the copied Codex React and TypeScript taste skills.
 
 The source skills are copied into `copied-skills/` before plugin code so the rule rationale travels with the implementation.
 
-## Plugins
+## Plugin
 
-- `react-taste`: React-specific rules.
-- `typescript-taste`: TypeScript-specific rules.
+`hodor` collects all custom rules. Hodor holds the door against code slop.
 
-Load one or both in oxlint:
+Load it in oxlint:
 
 ```js
-import { rules as builtInTasteRules } from "./src/built-in-taste-rules.js";
+import { rules as builtInTasteRules } from "./lint/built-in-taste-rules.js";
 
 export default {
-  jsPlugins: ["./src/react-taste.js", "./src/typescript-taste.js"],
+  jsPlugins: ["./lint/hodor.js"],
   rules: {
     ...builtInTasteRules.all,
-    "react-taste/no-react-fc": "error",
-    "typescript-taste/no-json-parse-type-assertion": "error"
+    "hodor/no-react-fc": "error",
+    "hodor/no-json-parse-type-assertion": "error"
   }
 };
 ```
@@ -35,20 +34,24 @@ The built-in preset is exported as one `rules` object:
 
 React:
 
-- `react-taste/no-react-fc`
-- `react-taste/no-forward-ref`
-- `react-taste/no-default-react-memoization`
-- `react-taste/no-function-deps-in-effect`
+- `hodor/no-react-fc`
+- `hodor/no-forward-ref`
+- `hodor/no-default-react-memoization`
+- `hodor/no-function-deps-in-effect`
 
 TypeScript:
 
-- `typescript-taste/no-boolean-flag-parameters`
-- `typescript-taste/prefer-named-object-parameters`
-- `typescript-taste/no-json-parse-type-assertion`
+- `hodor/no-positional-func-args`
+- `hodor/no-json-parse-type-assertion`
 
 ## Verification
 
 ```sh
 npm run check
-oxlint --config oxlint.config.mjs tests/fixtures
+npm run typecheck
+npm test
 ```
+
+Rule tests live next to each rule under `lint/rules/<rule-name>/`. Each rule has its
+own oxlint config, valid/invalid fixture files, and a Vitest file that runs the real
+oxlint CLI through `lint/test-utils/run-oxlint.ts`.

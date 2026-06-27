@@ -1,22 +1,20 @@
 {
   "name": "eslint-plugin-codex-taste",
   "version": "0.1.0",
-  "description": "ESLint-compatible oxlint plugins for selected Codex React and TypeScript taste rules.",
+  "description": "ESLint-compatible oxlint plugin for selected Codex React and TypeScript taste rules.",
   "type": "module",
-  "main": "src/index.js",
+  "main": "lint/index.js",
   "exports": {
-    ".": "./src/index.js",
-    "./built-in-taste-rules": "./src/built-in-taste-rules.js",
-    "./react-taste": "./src/react-taste.js",
-    "./typescript-taste": "./src/typescript-taste.js"
+    ".": "./lint/index.js",
+    "./built-in-taste-rules": "./lint/built-in-taste-rules.js",
+    "./hodor": "./lint/hodor.js"
   },
   "scripts": {
-    "check": "node --check src/index.js && node --check src/react-taste.js && node --check src/typescript-taste.js && node --check src/utils.js && node --check src/built-in-taste-rules.js",
-    "fmt": "oxfmt src tests package.json package-lock.json oxlint.config.mjs tsconfig.json",
-    "fmt:check": "oxfmt --check src tests package.json package-lock.json oxlint.config.mjs tsconfig.json",
-    "lint": "oxlint --config oxlint.config.mjs .",
-    "lint:fix": "oxlint --fix --config oxlint.config.mjs .",
-    "lint:fixtures": "oxlint --config oxlint.config.mjs tests/fixtures",
+    "check": "node --check lint/index.js && node --check lint/hodor.js && node --check lint/utils.js && node --check lint/built-in-taste-rules.js && find lint/rules -name rule.js -exec node --check {} \\;",
+    "fmt": "oxfmt lint package.json package-lock.json oxlint.config.mjs tsconfig.json",
+    "fmt:check": "oxfmt --check lint package.json package-lock.json oxlint.config.mjs tsconfig.json",
+    "lint": "oxlint --config oxlint.config.mjs --ignore-pattern 'lint/rules/*/fixtures/**' .",
+    "lint:fix": "oxlint --fix --config oxlint.config.mjs --ignore-pattern 'lint/rules/*/fixtures/**' .",
     "typecheck": "tsgo --noEmit -p tsconfig.json",
     "test": "vitest run"
   },

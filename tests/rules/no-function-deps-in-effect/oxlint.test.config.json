@@ -1,6 +1,0 @@
-{
-  "jsPlugins": ["../../../src/react-taste.js"],
-  "rules": {
-    "react-taste/no-function-deps-in-effect": "error"
-  }
-}

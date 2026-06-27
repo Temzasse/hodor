@@ -1,0 +1,6 @@
+{
+  "jsPlugins": ["../../hodor.js"],
+  "rules": {
+    "hodor/no-react-fc": "error"
+  }
+}
