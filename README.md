@@ -17,17 +17,26 @@ export default {
   jsPlugins: ["./lint/hodor.js"],
   rules: {
     ...builtInTasteRules.all,
-    "hodor/no-react-fc": "error",
-    "hodor/no-json-parse-type-assertion": "error"
-  }
+  },
 };
 ```
 
-The built-in preset is exported as one `rules` object:
+The default preset is exported as one `rules` object. `rules.all` includes pinned
+Oxlint default-on rules, selected non-default Oxlint rules, and custom `hodor/*`
+rules.
 
+- `rules.defaults`
 - `rules.basic`
+- `rules.core`
+- `rules.import`
+- `rules.oxc`
+- `rules.promise`
+- `rules.unicorn`
 - `rules.react`
+- `rules.jsxA11y`
 - `rules.typescript`
+- `rules.vitest`
+- `rules.hodor`
 - `rules.all`
 
 ## Implemented Rules

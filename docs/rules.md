@@ -2,24 +2,15 @@
 
 This package contains custom rules extracted from the copied Codex skills in `copied-skills/`.
 
-The rules are collected into one oxlint plugin named `hodor`.
+The custom rules are collected into one oxlint plugin named `hodor`.
 
-Built-in oxlint taste rules are grouped in `lint/built-in-taste-rules.js` so they can be applied alongside the custom plugin.
+Selected Oxlint rules are grouped in `lint/built-in-taste-rules.js` so they can be applied alongside the custom plugin.
 
-Rules intentionally omitted because oxlint already has built-ins:
+`rules.all` is the strict default preset. It includes:
 
-- `typescript/consistent-type-definitions` for preferring `type` over `interface`.
-- `typescript/consistent-type-assertions` for object literal assertions such as `{} as Foo`.
-- `import/no-default-export` for preferring named exports.
-- `no-else-return` for avoiding `else` after terminal branches.
-- `func-style` for preferring function declarations.
-- `oxc/no-barrel-file` for barrel files.
-- `react/jsx-handler-names` for `onX` and `handleX` naming.
-- `react/jsx-props-no-spreading` for broad JSX prop spreading.
-- `react/jsx-pascal-case` for JSX component casing.
-- `no-empty`, `no-useless-catch`, and `preserve-caught-error` for empty or useless catch blocks.
-- `no-await-in-loop` for sequential awaits in loops.
-- `oxc/no-accumulating-spread` and `unicorn/no-array-reduce` for costly or dense object-building reduce patterns.
+- Oxlint rules that are currently default-on, pinned explicitly in case upstream defaults change.
+- Selected non-default Oxlint rules for correctness, readability, robustness, performance, React, accessibility, TypeScript, Vitest, and modern JavaScript style.
+- Custom `hodor/*` rules.
 
 Implemented custom React rules:
 
@@ -42,8 +33,6 @@ export default {
   jsPlugins: ["./lint/hodor.js"],
   rules: {
     ...builtInTasteRules.all,
-    "hodor/no-react-fc": "error",
-    "hodor/no-json-parse-type-assertion": "error"
-  }
+  },
 };
 ```

@@ -45,7 +45,9 @@ export const rule = createRule({
       }
 
       if (parameters.length === 2) {
-        const [firstType, secondType] = parameters.map(getPrimitiveParameterType);
+        const [firstType, secondType] = parameters.map((parameter) =>
+          getPrimitiveParameterType(parameter),
+        );
 
         if (firstType && firstType === secondType) {
           context.report({
@@ -88,8 +90,6 @@ function getPrimitiveParameterType(parameter) {
   if (parameter.type === "AssignmentPattern") {
     return getPrimitiveLiteralTypeName(parameter.right);
   }
-
-  return undefined;
 }
 
 /**
@@ -103,8 +103,6 @@ function getPrimitiveTypeNodeName(typeNode) {
       return "number";
     case "TSBooleanKeyword":
       return "boolean";
-    default:
-      return undefined;
   }
 }
 

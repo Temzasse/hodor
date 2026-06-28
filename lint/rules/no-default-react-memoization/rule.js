@@ -1,14 +1,14 @@
 // @ts-check
 import { createRule, getCalleeName } from "../../utils.js";
 
-const defaultCallees = [
+const defaultCallees = new Set([
   "useMemo",
   "React.useMemo",
   "useCallback",
   "React.useCallback",
   "memo",
   "React.memo",
-];
+]);
 
 export const rule = createRule({
   meta: {
@@ -26,7 +26,7 @@ export const rule = createRule({
       CallExpression(node) {
         const calleeName = getCalleeName(node);
 
-        if (calleeName && defaultCallees.includes(calleeName)) {
+        if (calleeName && defaultCallees.has(calleeName)) {
           context.report({
             node,
             messageId: "memoization",

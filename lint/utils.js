@@ -42,7 +42,7 @@ export function getSourceCode(context) {
  */
 export function getIdentifierName(node) {
   if (!node) {
-    return undefined;
+    return;
   }
 
   if (node.type === "Identifier" || node.type === "JSXIdentifier") {
@@ -60,8 +60,6 @@ export function getIdentifierName(node) {
     const rightName = getIdentifierName(node.right);
     return leftName && rightName ? `${leftName}.${rightName}` : undefined;
   }
-
-  return undefined;
 }
 
 /**

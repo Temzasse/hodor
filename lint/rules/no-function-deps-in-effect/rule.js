@@ -192,8 +192,6 @@ function findVariableInScope({ scope, name }) {
 
     currentScope = currentScope.upper;
   }
-
-  return undefined;
 }
 
 /**
@@ -342,7 +340,11 @@ function buildEnsureUseEffectEventImportFixes({ fixer, sourceCode }) {
   }
 
   if (namedSpecifiers.length > 0) {
-    const lastNamedSpecifier = namedSpecifiers[namedSpecifiers.length - 1];
+    const lastNamedSpecifier = namedSpecifiers.at(-1);
+    if (!lastNamedSpecifier) {
+      return [];
+    }
+
     return [fixer.insertTextAfter(lastNamedSpecifier, ", useEffectEvent")];
   }
 

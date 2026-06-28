@@ -43,20 +43,71 @@ const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "
 const oxlintBin = path.join(packageRoot, "node_modules", ".bin", "oxlint");
 const tempDirs: string[] = [];
 
-export function createOxlintRuleTester({
-  ruleDirectoryUrl,
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isOxlintDiagnostic(value: unknown): value is OxlintDiagnostic {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    (value.code === undefined || typeof value.code === "string") &&
+    (value.message === undefined || typeof value.message === "string")
+  );
+}
+
+function getDiagnostics(parsed: unknown) {
+  if (!isRecord(parsed) || !Array.isArray(parsed.diagnostics)) {
+    return [];
+  }
+
+  return parsed.diagnostics.filter((diagnostic) => isOxlintDiagnostic(diagnostic));
+}
+
+function normalizeRuleId(code?: string) {
+  if (!code) {
+    return;
+  }
+
+  const match = code.match(/^([^()]+)\(([^()]+)\)$/);
+
+  if (!match) {
+    return code;
+  }
+
+  return `${match[1]}/${match[2]}`;
+}
+
+function parseOxlintJson(stdout: string) {
+  if (!stdout) {
+    return [] as OxlintMessage[];
+  }
+
+  const parsed: unknown = JSON.parse(stdout);
+  const diagnostics = getDiagnostics(parsed);
+
+  return diagnostics.map((diagnostic) => ({
+    ruleId: normalizeRuleId(diagnostic.code),
+    message: diagnostic.message,
+  }));
+}
+
+function createTempProject({
+  fixtureName,
+  readFixture,
   tempProjectPrefix,
-}: {
-  ruleDirectoryUrl: string;
-  tempProjectPrefix: string;
-}) {
-  const ruleDirectory = path.dirname(fileURLToPath(ruleDirectoryUrl));
-  const fixturesDir = path.join(ruleDirectory, "fixtures");
+}: CreateTempProjectParams) {
+  const tempDir = mkdtempSync(path.join(tmpdir(), tempProjectPrefix));
+  tempDirs.push(tempDir);
+
+  const srcFilePath = path.join(tempDir, `case${path.extname(fixtureName)}`);
+  writeFileSync(srcFilePath, readFixture(fixtureName), "utf8");
 
   return {
-    collectRuleMessages,
-    loadFixture: loadFixture({ fixturesDir }),
-    runOxlint: runOxlint({ fixturesDir, ruleDirectory, tempProjectPrefix }),
+    tempDir,
+    srcFilePath,
   };
 }
 
@@ -64,6 +115,10 @@ function loadFixture({ fixturesDir }: LoadFixtureParams) {
   return function readFixture(name: string) {
     return readFileSync(path.join(fixturesDir, name), "utf8");
   };
+}
+
+function collectRuleMessages(results: OxlintMessage[], ruleId: string) {
+  return results.filter((message) => message.ruleId === ruleId);
 }
 
 function runOxlint({ fixturesDir, ruleDirectory, tempProjectPrefix }: RunOxlintParams) {
@@ -111,76 +166,21 @@ function runOxlint({ fixturesDir, ruleDirectory, tempProjectPrefix }: RunOxlintP
   };
 }
 
-function createTempProject({
-  fixtureName,
-  readFixture,
+export function createOxlintRuleTester({
+  ruleDirectoryUrl,
   tempProjectPrefix,
-}: CreateTempProjectParams) {
-  const tempDir = mkdtempSync(path.join(tmpdir(), tempProjectPrefix));
-  tempDirs.push(tempDir);
-
-  const srcFilePath = path.join(tempDir, `case${path.extname(fixtureName)}`);
-  writeFileSync(srcFilePath, readFixture(fixtureName), "utf8");
+}: {
+  ruleDirectoryUrl: string;
+  tempProjectPrefix: string;
+}) {
+  const ruleDirectory = path.dirname(fileURLToPath(ruleDirectoryUrl));
+  const fixturesDir = path.join(ruleDirectory, "fixtures");
 
   return {
-    tempDir,
-    srcFilePath,
+    collectRuleMessages,
+    loadFixture: loadFixture({ fixturesDir }),
+    runOxlint: runOxlint({ fixturesDir, ruleDirectory, tempProjectPrefix }),
   };
-}
-
-function parseOxlintJson(stdout: string) {
-  if (!stdout) {
-    return [] as OxlintMessage[];
-  }
-
-  const parsed: unknown = JSON.parse(stdout);
-  const diagnostics = getDiagnostics(parsed);
-
-  return diagnostics.map((diagnostic) => ({
-    ruleId: normalizeRuleId(diagnostic.code),
-    message: diagnostic.message,
-  }));
-}
-
-function normalizeRuleId(code?: string) {
-  if (!code) {
-    return undefined;
-  }
-
-  const match = code.match(/^([^()]+)\(([^()]+)\)$/);
-
-  if (!match) {
-    return code;
-  }
-
-  return `${match[1]}/${match[2]}`;
-}
-
-function collectRuleMessages(results: OxlintMessage[], ruleId: string) {
-  return results.filter((message) => message.ruleId === ruleId);
-}
-
-function getDiagnostics(parsed: unknown) {
-  if (!isRecord(parsed) || !Array.isArray(parsed.diagnostics)) {
-    return [];
-  }
-
-  return parsed.diagnostics.filter(isOxlintDiagnostic);
-}
-
-function isOxlintDiagnostic(value: unknown): value is OxlintDiagnostic {
-  if (!isRecord(value)) {
-    return false;
-  }
-
-  return (
-    (value.code === undefined || typeof value.code === "string") &&
-    (value.message === undefined || typeof value.message === "string")
-  );
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
 }
 
 afterEach(() => {
