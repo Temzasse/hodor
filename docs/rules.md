@@ -27,12 +27,19 @@ Implemented custom TypeScript rules:
 Use from `oxlint.config.mjs`:
 
 ```js
-import { rules as builtInTasteRules } from "./lint/built-in-taste-rules.js";
+import hodor from "oxlint-config-hodor";
 
 export default {
-  jsPlugins: ["./lint/hodor.js"],
+  jsPlugins: [hodor.jsPlugin],
+  extends: [hodor.config],
   rules: {
-    ...builtInTasteRules.all,
+    ...hodor.rules,
   },
 };
 ```
+
+`extends` applies the built-in plugin list and rules. `hodor.jsPlugin` is set
+separately because Oxlint does not currently merge JS plugins through `extends`.
+`hodor.jsPlugin` is the resolved specifier for the package's internal JS plugin.
+`hodor.rules` contains the custom `hodor/*` rule key/value pairs for consumers that
+want to spread or override those rules explicitly.

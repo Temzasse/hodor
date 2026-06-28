@@ -1,4 +1,4 @@
-# eslint-plugin-codex-taste
+# oxlint-config-hodor
 
 ESLint-compatible oxlint plugin for selected rules from the copied Codex React and TypeScript taste skills.
 
@@ -11,33 +11,23 @@ The source skills are copied into `copied-skills/` before plugin code so the rul
 Load it in oxlint:
 
 ```js
-import { rules as builtInTasteRules } from "./lint/built-in-taste-rules.js";
+import hodor from "oxlint-config-hodor";
 
 export default {
-  jsPlugins: ["./lint/hodor.js"],
+  jsPlugins: [hodor.jsPlugin],
+  extends: [hodor.config],
   rules: {
-    ...builtInTasteRules.all,
+    ...hodor.rules,
   },
 };
 ```
 
-The default preset is exported as one `rules` object. `rules.all` includes pinned
-Oxlint default-on rules, selected non-default Oxlint rules, and custom `hodor/*`
-rules.
-
-- `rules.defaults`
-- `rules.basic`
-- `rules.core`
-- `rules.import`
-- `rules.oxc`
-- `rules.promise`
-- `rules.unicorn`
-- `rules.react`
-- `rules.jsxA11y`
-- `rules.typescript`
-- `rules.vitest`
-- `rules.hodor`
-- `rules.all`
+`extends` applies Hodor's built-in plugin list and rules. Oxlint does not currently
+merge `jsPlugins` through `extends`, so `jsPlugins` is exported separately to avoid
+hardcoding the package specifier in consumer configs.
+`hodor.jsPlugin` is the resolved specifier for the package's internal JS plugin.
+`hodor.rules` contains the custom `hodor/*` rule key/value pairs for configs that
+want to spread, inspect, or override those custom rules explicitly.
 
 ## Implemented Rules
 

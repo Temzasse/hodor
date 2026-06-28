@@ -1,14 +1,10 @@
 {
-  "name": "eslint-plugin-codex-taste",
+  "name": "oxlint-config-hodor",
   "version": "0.1.0",
   "description": "ESLint-compatible oxlint plugin for selected Codex React and TypeScript taste rules.",
   "type": "module",
   "main": "lint/index.js",
-  "exports": {
-    ".": "./lint/index.js",
-    "./built-in-taste-rules": "./lint/built-in-taste-rules.js",
-    "./hodor": "./lint/hodor.js"
-  },
+  "exports": "./lint/index.js",
   "scripts": {
     "check": "node --check lint/index.js && node --check lint/hodor.js && node --check lint/utils.js && node --check lint/built-in-taste-rules.js && find lint/rules -name rule.js -exec node --check {} \\;",
     "fmt": "oxfmt lint package.json package-lock.json oxlint.config.mjs tsconfig.json",

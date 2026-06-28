@@ -1,8 +1,17 @@
-import { rules } from "./lint/built-in-taste-rules.js";
+import hodor from "oxlint-config-hodor";
 
 export default {
-  jsPlugins: ["./lint/hodor.js"],
+  jsPlugins: [hodor.jsPlugin],
+  extends: [hodor.config],
   rules: {
-    ...rules.all,
+    ...hodor.rules,
   },
+  overrides: [
+    {
+      files: ["lint/hodor.js", "lint/index.js"],
+      rules: {
+        "import/no-default-export": "off",
+      },
+    },
+  ],
 };

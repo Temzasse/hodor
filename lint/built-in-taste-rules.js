@@ -1,4 +1,22 @@
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "oxlint";
+
 const error = "error";
+
+/** @type {import("oxlint").OxlintConfig["plugins"]} */
+const plugins = [
+  "eslint",
+  "import",
+  "jsx-a11y",
+  "oxc",
+  "promise",
+  "react",
+  "typescript",
+  "unicorn",
+  "vitest",
+];
+
+export const jsPlugin = fileURLToPath(new URL("./hodor.js", import.meta.url));
 
 // Oxlint default-on rules are pinned explicitly so Hodor keeps the same baseline if future Oxlint versions change defaults.
 const defaultOxlintRuleEntries = [
@@ -114,7 +132,6 @@ const defaultOxlintRuleEntries = [
   ["unicorn/no-useless-spread", error],
   ["unicorn/prefer-set-size", error],
   ["unicorn/prefer-string-starts-ends-with", error],
-  ["vue/no-dupe-keys", error],
 ];
 
 const coreRuleEntries = [
@@ -387,6 +404,8 @@ const hodorRuleEntries = [
   ["hodor/no-function-deps-in-effect", error],
 ];
 
+export const hodorRules = Object.fromEntries(hodorRuleEntries);
+
 const basicRuleEntries = [
   ...defaultOxlintRuleEntries,
   ...coreRuleEntries,
@@ -396,7 +415,7 @@ const basicRuleEntries = [
   ...unicornRuleEntries,
 ];
 
-export const rules = {
+const ruleGroups = {
   defaults: Object.fromEntries(defaultOxlintRuleEntries),
   basic: Object.fromEntries(basicRuleEntries),
   core: Object.fromEntries(coreRuleEntries),
@@ -408,7 +427,7 @@ export const rules = {
   jsxA11y: Object.fromEntries(jsxA11yRuleEntries),
   typescript: Object.fromEntries(typescriptRuleEntries),
   vitest: Object.fromEntries(vitestRuleEntries),
-  hodor: Object.fromEntries(hodorRuleEntries),
+  hodor: hodorRules,
   all: Object.fromEntries([
     ...basicRuleEntries,
     ...reactRuleEntries,
@@ -418,3 +437,17 @@ export const rules = {
     ...hodorRuleEntries,
   ]),
 };
+
+export const config = defineConfig({
+  plugins,
+  rules: ruleGroups.all,
+  overrides: [
+    {
+      files: ["oxlint.config.*"],
+      rules: {
+        "import/no-default-export": "off",
+        "import/no-named-as-default-member": "off",
+      },
+    },
+  ],
+});
