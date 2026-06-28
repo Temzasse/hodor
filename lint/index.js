@@ -1,9 +1,9 @@
-import { config, hodorRules, jsPlugin } from "./built-in-taste-rules.js";
+import { config, customRules, jsPlugin } from "./rules/index.js";
 
 const hodor = {
   config,
   jsPlugin,
-  rules: hodorRules,
+  rules: customRules,
 };
 
 export default hodor;

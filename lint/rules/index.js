@@ -16,7 +16,7 @@ const plugins = [
   "vitest",
 ];
 
-export const jsPlugin = fileURLToPath(new URL("./hodor.js", import.meta.url));
+export const jsPlugin = fileURLToPath(new URL("./plugin.js", import.meta.url));
 
 // Oxlint default-on rules are pinned explicitly so Hodor keeps the same baseline if future Oxlint versions change defaults.
 const defaultOxlintRuleEntries = [
@@ -395,7 +395,7 @@ const unicornRuleEntries = [
   ["unicorn/throw-new-error", error],
 ];
 
-const hodorRuleEntries = [
+const customRuleEntries = [
   ["hodor/no-positional-func-args", error],
   ["hodor/no-json-parse-type-assertion", error],
   ["hodor/no-react-fc", error],
@@ -404,7 +404,7 @@ const hodorRuleEntries = [
   ["hodor/no-function-deps-in-effect", error],
 ];
 
-export const hodorRules = Object.fromEntries(hodorRuleEntries);
+export const customRules = Object.fromEntries(customRuleEntries);
 
 const basicRuleEntries = [
   ...defaultOxlintRuleEntries,
@@ -427,14 +427,14 @@ const ruleGroups = {
   jsxA11y: Object.fromEntries(jsxA11yRuleEntries),
   typescript: Object.fromEntries(typescriptRuleEntries),
   vitest: Object.fromEntries(vitestRuleEntries),
-  hodor: hodorRules,
+  hodor: customRules,
   all: Object.fromEntries([
     ...basicRuleEntries,
     ...reactRuleEntries,
     ...jsxA11yRuleEntries,
     ...typescriptRuleEntries,
     ...vitestRuleEntries,
-    ...hodorRuleEntries,
+    ...customRuleEntries,
   ]),
 };
 

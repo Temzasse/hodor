@@ -1,5 +1,5 @@
 {
-  "jsPlugins": ["../../hodor.js"],
+  "jsPlugins": ["../../plugin.js"],
   "rules": {
     "hodor/no-json-parse-type-assertion": "error"
   }

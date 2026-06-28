@@ -1,4 +1,4 @@
-import hodor from "oxlint-config-hodor";
+import hodor from "oxlint-preset-hodor";
 
 export default {
   jsPlugins: [hodor.jsPlugin],
@@ -8,7 +8,7 @@ export default {
   },
   overrides: [
     {
-      files: ["lint/hodor.js", "lint/index.js"],
+      files: ["lint/plugin.js", "lint/index.js"],
       rules: {
         "import/no-default-export": "off",
       },

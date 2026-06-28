@@ -1,9 +1,9 @@
 ---
-name: react-code-taste
+name: react-code-quality
 description: Use when writing, refactoring, reviewing, or explaining React code, including components, hooks, JSX structure, state management, routing state, data fetching, async UI actions, accessibility, component APIs, file organization, and React TypeScript patterns.
 ---
 
-# React Code Taste
+# React Code Quality
 
 ## Overview
 

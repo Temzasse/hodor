@@ -1,4 +1,4 @@
-# oxlint-config-hodor
+# oxlint-preset-hodor
 
 ESLint-compatible oxlint plugin for selected rules from the copied Codex React and TypeScript taste skills.
 
@@ -11,7 +11,7 @@ The source skills are copied into `copied-skills/` before plugin code so the rul
 Load it in oxlint:
 
 ```js
-import hodor from "oxlint-config-hodor";
+import hodor from "oxlint-preset-hodor";
 
 export default {
   jsPlugins: [hodor.jsPlugin],

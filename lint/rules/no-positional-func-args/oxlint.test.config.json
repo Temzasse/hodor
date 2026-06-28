@@ -1,5 +1,5 @@
 {
-  "jsPlugins": ["../../hodor.js"],
+  "jsPlugins": ["../../plugin.js"],
   "rules": {
     "hodor/no-positional-func-args": "error"
   }
