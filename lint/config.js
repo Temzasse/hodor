@@ -395,17 +395,6 @@ const unicornRuleEntries = [
   ["unicorn/throw-new-error", error],
 ];
 
-const customRuleEntries = [
-  ["hodor/no-positional-func-args", error],
-  ["hodor/no-json-parse-type-assertion", error],
-  ["hodor/no-react-fc", error],
-  ["hodor/no-forward-ref", error],
-  ["hodor/no-default-react-memoization", error],
-  ["hodor/no-function-deps-in-effect", error],
-];
-
-export const customRules = Object.fromEntries(customRuleEntries);
-
 const basicRuleEntries = [
   ...defaultOxlintRuleEntries,
   ...coreRuleEntries,
@@ -415,20 +404,19 @@ const basicRuleEntries = [
   ...unicornRuleEntries,
 ];
 
-const ruleGroups = {
-  defaults: Object.fromEntries(defaultOxlintRuleEntries),
-  basic: Object.fromEntries(basicRuleEntries),
-  core: Object.fromEntries(coreRuleEntries),
-  import: Object.fromEntries(importRuleEntries),
-  oxc: Object.fromEntries(oxcRuleEntries),
-  promise: Object.fromEntries(promiseRuleEntries),
-  unicorn: Object.fromEntries(unicornRuleEntries),
-  react: Object.fromEntries(reactRuleEntries),
-  jsxA11y: Object.fromEntries(jsxA11yRuleEntries),
-  typescript: Object.fromEntries(typescriptRuleEntries),
-  vitest: Object.fromEntries(vitestRuleEntries),
-  hodor: customRules,
-  all: Object.fromEntries([
+const customRuleEntries = [
+  ["hodor/no-positional-func-args", error],
+  ["hodor/no-react-fc", error],
+  ["hodor/no-forward-ref", error],
+  ["hodor/no-default-react-memoization", error],
+  ["hodor/no-function-deps-in-effect", error],
+];
+
+export const customRules = Object.fromEntries(customRuleEntries);
+
+export const config = defineConfig({
+  plugins,
+  rules: Object.fromEntries([
     ...basicRuleEntries,
     ...reactRuleEntries,
     ...jsxA11yRuleEntries,
@@ -436,11 +424,6 @@ const ruleGroups = {
     ...vitestRuleEntries,
     ...customRuleEntries,
   ]),
-};
-
-export const config = defineConfig({
-  plugins,
-  rules: ruleGroups.all,
   overrides: [
     {
       files: ["oxlint.config.*"],

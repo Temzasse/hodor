@@ -33,7 +33,6 @@ These are already present in `lint/built-in-taste-rules.js` or the Hodor plugin 
 - `hodor/no-default-react-memoization`
 - `hodor/no-forward-ref`
 - `hodor/no-function-deps-in-effect`
-- `hodor/no-json-parse-type-assertion`
 - `hodor/no-positional-func-args`
 - `hodor/no-react-fc`
 

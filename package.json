@@ -6,13 +6,14 @@
   "main": "lint/index.js",
   "exports": "./lint/index.js",
   "scripts": {
-    "check": "node --check lint/index.js && node --check lint/plugin.js && node --check lint/utils.js && node --check lint/rules/index.js && find lint/rules -name rule.js -exec node --check {} \\;",
+    "check": "node --check lint/index.js && node --check lint/plugin.js && node --check lint/utils.js && node --check lint/config.js && find lint/rules -name rule.js -exec node --check {} \\;",
     "fmt": "oxfmt lint package.json oxlint.config.mjs tsconfig.json",
     "fmt:check": "oxfmt --check lint package.json oxlint.config.mjs tsconfig.json",
     "lint": "oxlint --config oxlint.config.mjs --ignore-pattern 'lint/rules/*/fixtures/**' .",
     "lint:fix": "oxlint --fix --config oxlint.config.mjs --ignore-pattern 'lint/rules/*/fixtures/**' .",
     "typecheck": "tsgo --noEmit -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "verify": "concurrently --kill-others-on-fail \"npm run fmt:check\" \"npm run lint\" \"npm run typecheck\" \"npm run test\""
   },
   "dependencies": {
     "@oxlint/plugins": "1.71.0"
@@ -21,6 +22,7 @@
     "@types/node": "26.0.1",
     "@types/react": "19.2.17",
     "@typescript/native-preview": "7.0.0-dev.20260628.1",
+    "concurrently": "10.0.3",
     "oxfmt": "0.56.0",
     "oxlint": "1.71.0",
     "vitest": "4.1.9"

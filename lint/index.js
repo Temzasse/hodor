@@ -1,4 +1,4 @@
-import { config, customRules, jsPlugin } from "./rules/index.js";
+import { config, customRules, jsPlugin } from "./config.js";
 
 const hodor = {
   config,

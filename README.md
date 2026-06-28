@@ -1,12 +1,8 @@
 # oxlint-preset-hodor
 
-ESLint-compatible oxlint plugin for selected rules from the copied Codex React and TypeScript taste skills.
-
-The source skills are copied into `copied-skills/` before plugin code so the rule rationale travels with the implementation.
+Oxlint plugin for keeping React code clean and consistent. Hodor holds the door against code slop.
 
 ## Plugin
-
-`hodor` collects all custom rules. Hodor holds the door against code slop.
 
 Load it in oxlint:
 
@@ -31,17 +27,11 @@ want to spread, inspect, or override those custom rules explicitly.
 
 ## Implemented Rules
 
-React:
-
 - `hodor/no-react-fc`
 - `hodor/no-forward-ref`
 - `hodor/no-default-react-memoization`
 - `hodor/no-function-deps-in-effect`
-
-TypeScript:
-
 - `hodor/no-positional-func-args`
-- `hodor/no-json-parse-type-assertion`
 
 ## Verification
 
