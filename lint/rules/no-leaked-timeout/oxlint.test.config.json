@@ -1,6 +1,0 @@
-{
-  "jsPlugins": ["../../plugin.js"],
-  "rules": {
-    "hodor/no-leaked-timeout": "error"
-  }
-}

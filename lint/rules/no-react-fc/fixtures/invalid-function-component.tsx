@@ -1,3 +1,4 @@
+// hodor-test expect-message: Use a plain function component
 import type { FunctionComponent } from "react";
 
 type Props = {

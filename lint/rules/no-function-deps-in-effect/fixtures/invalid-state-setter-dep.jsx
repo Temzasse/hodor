@@ -1,3 +1,4 @@
+// hodor-test expect-message: Function 'setCount' in effect deps
 import { useEffect, useState } from "react";
 
 export function Component() {

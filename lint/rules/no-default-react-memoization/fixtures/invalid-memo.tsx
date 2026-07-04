@@ -1,3 +1,4 @@
+// hodor-test expect-message: Avoid memo by default
 import { memo } from "react";
 
 function Card({ title }: { title: string }) {

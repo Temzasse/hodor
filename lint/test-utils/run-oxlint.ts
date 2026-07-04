@@ -1,29 +1,17 @@
-import { spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { afterEach } from "vitest";
 
 type OxlintDiagnostic = {
   code?: string;
   message?: string;
 };
 
-type CreateTempProjectParams = {
-  fixtureName: string;
-  readFixture(name: string): string;
-  tempProjectPrefix: string;
-};
-
-type LoadFixtureParams = {
-  fixturesDir: string;
-};
-
-type RunOxlintParams = {
-  fixturesDir: string;
-  ruleDirectory: string;
-  tempProjectPrefix: string;
+export type FixtureExpectations = {
+  expectedCount?: number;
+  expectedMessages: string[];
 };
 
 export type OxlintMessage = {
@@ -41,7 +29,7 @@ export type OxlintRun = {
 
 const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const oxlintBin = path.join(packageRoot, "node_modules", ".bin", "oxlint");
-const tempDirs: string[] = [];
+const pluginPath = path.join(packageRoot, "lint", "plugin.js");
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -94,66 +82,140 @@ function parseOxlintJson(stdout: string) {
   }));
 }
 
-function createTempProject({
-  fixtureName,
-  readFixture,
-  tempProjectPrefix,
-}: CreateTempProjectParams) {
-  const tempDir = mkdtempSync(path.join(tmpdir(), tempProjectPrefix));
-  tempDirs.push(tempDir);
+function createTempProject({ fixturePath, ruleId }: { fixturePath: string; ruleId: string }) {
+  const tempDir = mkdtempSync(path.join(tmpdir(), "hodor-rule-fixture-"));
 
-  const srcFilePath = path.join(tempDir, `case${path.extname(fixtureName)}`);
-  writeFileSync(srcFilePath, readFixture(fixtureName), "utf8");
+  const srcFilePath = path.join(tempDir, `case${path.extname(fixturePath)}`);
+  const oxlintConfigPath = path.join(tempDir, "oxlint.config.json");
+  const config = {
+    jsPlugins: [pluginPath],
+    rules: {
+      [ruleId]: "error",
+    },
+  };
+
+  writeFileSync(srcFilePath, readFileSync(fixturePath, "utf8"), "utf8");
+  writeFileSync(oxlintConfigPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
 
   return {
-    tempDir,
+    oxlintConfigPath,
     srcFilePath,
+    tempDir,
   };
 }
 
-function loadFixture({ fixturesDir }: LoadFixtureParams) {
-  return function readFixture(name: string) {
-    return readFileSync(path.join(fixturesDir, name), "utf8");
-  };
+function runOxlintProcess({ args, cwd }: { args: string[]; cwd: string }) {
+  return new Promise<{
+    status: number | null;
+    stderr: string;
+    stdout: string;
+  }>((resolve, reject) => {
+    const child = spawn(oxlintBin, args, { cwd });
+    const stderrChunks: Buffer[] = [];
+    const stdoutChunks: Buffer[] = [];
+
+    child.stderr.on("data", (chunk: Buffer) => {
+      stderrChunks.push(chunk);
+    });
+    child.stdout.on("data", (chunk: Buffer) => {
+      stdoutChunks.push(chunk);
+    });
+    child.on("error", reject);
+    child.on("close", (status) => {
+      resolve({
+        status,
+        stderr: Buffer.concat(stderrChunks).toString("utf8"),
+        stdout: Buffer.concat(stdoutChunks).toString("utf8"),
+      });
+    });
+  });
 }
 
-function collectRuleMessages(results: OxlintMessage[], ruleId: string) {
+export function collectRuleMessages({
+  results,
+  ruleId,
+}: {
+  results: OxlintMessage[];
+  ruleId: string;
+}) {
   return results.filter((message) => message.ruleId === ruleId);
 }
 
-function runOxlint({ fixturesDir, ruleDirectory, tempProjectPrefix }: RunOxlintParams) {
-  const readFixture = loadFixture({ fixturesDir });
+export function parseFixtureExpectations({
+  fixtureContent,
+  fixturePath,
+}: {
+  fixtureContent: string;
+  fixturePath: string;
+}): FixtureExpectations {
+  const expectedMessages: string[] = [];
+  let expectedCount: number | undefined;
 
-  return function runOxlintForFixture({
-    fixtureName,
-    configName = "oxlint.test.config.json",
-    fix = false,
-  }: {
-    fixtureName: string;
-    configName?: string;
-    fix?: boolean;
-  }): OxlintRun {
-    const { srcFilePath, tempDir } = createTempProject({
-      fixtureName,
-      readFixture,
-      tempProjectPrefix,
-    });
-    const oxlintConfigPath = path.join(ruleDirectory, configName);
-    const args = ["--config", oxlintConfigPath, srcFilePath, "--format", "json"];
-
-    if (fix) {
-      args.unshift("--fix");
+  for (const [index, line] of fixtureContent.split("\n").entries()) {
+    if (!line.includes("hodor-test")) {
+      continue;
     }
 
-    const result = spawnSync(oxlintBin, args, {
-      cwd: tempDir,
-      encoding: "utf8",
-    });
+    const directive = line.match(/^\s*\/\/\s*hodor-test\s+([a-z-]+):\s*(.*?)\s*$/);
 
-    if (result.error) {
-      throw result.error;
+    if (!directive) {
+      throw new Error(`Malformed hodor-test directive in ${fixturePath}:${index + 1}`);
     }
 
+    const [, name, value] = directive;
+
+    switch (name) {
+      case "expect-count": {
+        if (!/^\d+$/.test(value)) {
+          throw new Error(`Invalid expect-count directive in ${fixturePath}:${index + 1}`);
+        }
+
+        expectedCount = Number(value);
+        break;
+      }
+
+      case "expect-message": {
+        if (!value) {
+          throw new Error(`Empty expect-message directive in ${fixturePath}:${index + 1}`);
+        }
+
+        expectedMessages.push(value);
+        break;
+      }
+
+      default:
+        throw new Error(`Unknown hodor-test directive "${name}" in ${fixturePath}:${index + 1}`);
+    }
+  }
+
+  return {
+    expectedCount,
+    expectedMessages,
+  };
+}
+
+export async function runOxlintForFixture({
+  fixturePath,
+  fix = false,
+  ruleName,
+}: {
+  fixturePath: string;
+  fix?: boolean;
+  ruleName: string;
+}): Promise<OxlintRun> {
+  const ruleId = `hodor/${ruleName}`;
+  const { oxlintConfigPath, srcFilePath, tempDir } = createTempProject({
+    fixturePath,
+    ruleId,
+  });
+  const args = ["--config", oxlintConfigPath, srcFilePath, "--format", "json"];
+
+  if (fix) {
+    args.unshift("--fix");
+  }
+
+  try {
+    const result = await runOxlintProcess({ args, cwd: tempDir });
     const stdout = result.stdout.trim();
 
     return {
@@ -163,28 +225,7 @@ function runOxlint({ fixturesDir, ruleDirectory, tempProjectPrefix }: RunOxlintP
       parsed: parseOxlintJson(stdout),
       fileContent: readFileSync(srcFilePath, "utf8"),
     };
-  };
-}
-
-export function createOxlintRuleTester({
-  ruleDirectoryUrl,
-  tempProjectPrefix,
-}: {
-  ruleDirectoryUrl: string;
-  tempProjectPrefix: string;
-}) {
-  const ruleDirectory = path.dirname(fileURLToPath(ruleDirectoryUrl));
-  const fixturesDir = path.join(ruleDirectory, "fixtures");
-
-  return {
-    collectRuleMessages,
-    loadFixture: loadFixture({ fixturesDir }),
-    runOxlint: runOxlint({ fixturesDir, ruleDirectory, tempProjectPrefix }),
-  };
-}
-
-afterEach(() => {
-  for (const tempDir of tempDirs.splice(0)) {
+  } finally {
     rmSync(tempDir, { recursive: true, force: true });
   }
-});
+}

@@ -1,3 +1,4 @@
+// hodor-test expect-message: Avoid forwardRef
 import { forwardRef } from "react";
 
 type Props = {

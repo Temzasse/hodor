@@ -1,3 +1,4 @@
+// hodor-test expect-message: setState updater argument
 import React from "react";
 
 class Counter extends React.Component {
