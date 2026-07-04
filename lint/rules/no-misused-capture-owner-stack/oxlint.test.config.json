@@ -1,0 +1,6 @@
+{
+  "jsPlugins": ["../../plugin.js"],
+  "rules": {
+    "hodor/no-misused-capture-owner-stack": "error"
+  }
+}

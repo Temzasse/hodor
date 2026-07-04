@@ -1,0 +1,6 @@
+{
+  "jsPlugins": ["../../plugin.js"],
+  "rules": {
+    "hodor/id-name": "error"
+  }
+}

@@ -27,6 +27,42 @@ want to spread, inspect, or override those custom rules explicitly.
 
 ## Implemented Rules
 
+- `hodor/no-access-state-in-setstate`
+- `hodor/no-class-component`
+- `hodor/no-context-provider`
+- `hodor/no-create-ref`
+- `hodor/no-duplicate-key`
+- `hodor/no-implicit-children`
+- `hodor/no-implicit-key`
+- `hodor/no-implicit-ref`
+- `hodor/no-leaked-conditional-rendering`
+- `hodor/no-missing-context-display-name`
+- `hodor/no-misused-capture-owner-stack`
+- `hodor/no-nested-lazy-component-declarations`
+- `hodor/no-unnecessary-use-prefix`
+- `hodor/no-unused-class-component-members`
+- `hodor/no-unused-props`
+- `hodor/no-unused-state`
+- `hodor/no-use-context`
+- `hodor/no-key-after-spread`
+- `hodor/no-leaked-dollar`
+- `hodor/no-leaked-semicolon`
+- `hodor/no-namespace`
+- `hodor/context-name`
+- `hodor/function-definition`
+- `hodor/id-name`
+- `hodor/ref-name`
+- `hodor/no-find-dom-node`
+- `hodor/no-flush-sync`
+- `hodor/no-hydrate`
+- `hodor/no-render`
+- `hodor/no-use-form-state`
+- `hodor/no-leaked-event-listener`
+- `hodor/no-leaked-fetch`
+- `hodor/no-leaked-intersection-observer`
+- `hodor/no-leaked-interval`
+- `hodor/no-leaked-resize-observer`
+- `hodor/no-leaked-timeout`
 - `hodor/no-react-fc`
 - `hodor/no-forward-ref`
 - `hodor/no-default-react-memoization`

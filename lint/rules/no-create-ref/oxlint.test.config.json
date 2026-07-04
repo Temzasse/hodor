@@ -1,0 +1,6 @@
+{
+  "jsPlugins": ["../../plugin.js"],
+  "rules": {
+    "hodor/no-create-ref": "error"
+  }
+}

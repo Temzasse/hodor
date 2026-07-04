@@ -1,0 +1,1 @@
+createRoot(root).render(<App />);

@@ -1,0 +1,6 @@
+{
+  "jsPlugins": ["../../plugin.js"],
+  "rules": {
+    "hodor/no-missing-context-display-name": "error"
+  }
+}
