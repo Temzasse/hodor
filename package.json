@@ -2,15 +2,39 @@
   "name": "oxlint-preset-hodor",
   "version": "0.1.0",
   "description": "Hodor oxlint plugin keeps the AI slop out of your codebase.",
+  "keywords": [
+    "lint",
+    "oxlint",
+    "oxlint-plugin",
+    "oxlint-preset",
+    "react"
+  ],
+  "homepage": "https://github.com/Temzasse/hodor#readme",
+  "bugs": {
+    "url": "https://github.com/Temzasse/hodor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Temzasse/hodor.git"
+  },
+  "files": [
+    "lint/**/*.js"
+  ],
   "type": "module",
   "main": "lint/index.js",
-  "exports": "./lint/index.js",
+  "exports": {
+    ".": "./lint/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "check": "node --check lint/index.js && node --check lint/plugin.js && node --check lint/utils.js && node --check lint/config.js && find lint/rules -name rule.js -exec node --check {} \\;",
     "fmt": "oxfmt lint package.json oxlint.config.mjs tsconfig.json",
     "fmt:check": "oxfmt --check lint package.json oxlint.config.mjs tsconfig.json",
     "lint": "oxlint --config oxlint.config.mjs --ignore-pattern 'lint/rules/*/fixtures/**' .",
     "lint:fix": "oxlint --fix --config oxlint.config.mjs --ignore-pattern 'lint/rules/*/fixtures/**' .",
+    "release": "np --test-script verify",
     "typecheck": "tsgo --noEmit -p tsconfig.json",
     "test": "vitest run",
     "verify": "concurrently --kill-others-on-fail \"npm run fmt:check\" \"npm run lint\" \"npm run typecheck\" \"npm run test\""
@@ -29,5 +53,8 @@
   },
   "peerDependencies": {
     "oxlint": ">=1"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
