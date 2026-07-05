@@ -13,6 +13,7 @@
   "bugs": {
     "url": "https://github.com/Temzasse/hodor/issues"
   },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Temzasse/hodor.git"
