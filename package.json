@@ -1,6 +1,6 @@
 {
   "name": "oxlint-preset-hodor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hodor oxlint plugin keeps the AI slop out of your codebase.",
   "keywords": [
     "lint",
