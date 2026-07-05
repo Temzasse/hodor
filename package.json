@@ -40,10 +40,8 @@
     "test": "vitest run",
     "verify": "concurrently --kill-others-on-fail \"npm run fmt:check\" \"npm run lint\" \"npm run typecheck\" \"npm run test\""
   },
-  "dependencies": {
-    "@oxlint/plugins": "1.71.0"
-  },
   "devDependencies": {
+    "@oxlint/plugins": "1.71.0",
     "@types/node": "26.0.1",
     "@types/react": "19.2.17",
     "@typescript/native-preview": "7.0.0-dev.20260628.1",
